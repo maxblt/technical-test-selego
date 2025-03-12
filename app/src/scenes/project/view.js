@@ -265,7 +265,10 @@ const Links = ({ project }) => {
     <div className="flex flex-wrap gap-3">
       {project.website && (
         <div className="group text-sm font-medium	text-gray-700 border-[1px] border-gray-700 rounded-full overflow-hidden">
-          <a target="blank" href={project.website} className="break-words cursor-pointer text-gray-700 hover:text-white hover:bg-gray-700 flex hover:no-underline h-full">
+          <a
+            target="_blank"
+            href={project.website.startsWith("http") ? project.website : `http://${project.website}`}
+            className="break-words cursor-pointer text-gray-700 hover:text-white hover:bg-gray-700 flex hover:no-underline h-full">
             <div className="flex items-center bg-gray-700 py-1 px-2 rounded-r-full ">
               <IoIosAt className="group-hover:scale-110 text-white" />
             </div>
