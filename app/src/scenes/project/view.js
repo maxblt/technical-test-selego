@@ -23,8 +23,8 @@ export default function ProjectView() {
 
   useEffect(() => {
     (async () => {
-      const { data: u } = await api.get(`/project/${id}`);
-      setProject(u);
+      const { data: projectData } = await api.get(`/project/${id}`);
+      setProject(projectData);
     })();
   }, []);
 
