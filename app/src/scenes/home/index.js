@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const [availableUsers, setAvailableUsers] = useState();
+  const currentUser = useSelector((state) => state.Auth.user);
 
   async function getUser() {
     const { data } = await api.get("/user/available");
@@ -10,7 +12,7 @@ const Home = () => {
   }
   useEffect(() => {
     getUser();
-  }, []);
+  }, [currentUser.availability]);
 
   return (
     <div className="px-2 md:!px-8 flex flex-col md:flex-row gap-5 mt-5">

@@ -5,18 +5,23 @@ import { useHistory } from "react-router-dom";
 import Loader from "../../components/loader";
 import LoadingButton from "../../components/loadingButton";
 import api from "../../services/api";
+import { useSelector } from "react-redux";
 
 const NewList = () => {
   const [users, setUsers] = useState(null);
   const [projects, setProjects] = useState([]);
   const [usersFiltered, setUsersFiltered] = useState(null);
   const [filter, setFilter] = useState({ status: "active", availability: "", search: "" });
+  const currentUser = useSelector((state) => state.Auth.user);
 
   useEffect(() => {
     (async () => {
       const { data } = await api.get("/user");
       setUsers(data);
     })();
+  }, [currentUser.availability]);
+
+  useEffect(() => {
     getProjects();
   }, []);
 
