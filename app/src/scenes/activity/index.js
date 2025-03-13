@@ -48,7 +48,7 @@ const Activity = () => {
 
 const Activities = ({ date, user, project }) => {
   const [activities, setActivities] = useState([]);
-  const [open, setOpen] = useState(null);
+  const [openTextareas, setOpenTextareas] = useState(new Set());
 
   useEffect(() => {
     (async () => {
@@ -59,7 +59,7 @@ const Activities = ({ date, user, project }) => {
           return { ...activity, projectName: (activity.projectName = projects.data.find((project) => project._id === activity.projectId)?.name) };
         }),
       );
-      setOpen(null);
+      setOpenTextareas(new Set());
     })();
   }, [date]);
 
@@ -128,6 +128,18 @@ const Activities = ({ date, user, project }) => {
     return (activities.reduce((acc, a) => acc + a.total, 0) / 8).toFixed(2);
   };
 
+  const toggleTextarea = (i) => {
+    const newOpenTextareas = new Set(openTextareas);
+
+    if (newOpenTextareas.has(i)) {
+      newOpenTextareas.delete(i);
+    } else {
+      newOpenTextareas.add(i);
+    }
+
+    setOpenTextareas(newOpenTextareas);
+  };
+
   return (
     <div className="flex flex-wrap py-3 gap-4 text-black">
       <div className="w-screen md:w-full p-2 md:!px-8">
@@ -176,8 +188,10 @@ const Activities = ({ date, user, project }) => {
                   {activities.map((e, i) => {
                     return (
                       <React.Fragment key={e.project}>
-                        <tr className="border-t border-b border-r border-[#E5EAEF]" key={`1-${e._id}`} onClick={() => setOpen(i)}>
-                          <th className="w-[100px] border-t border-b border-r text-[12px] font-bold text-[#212325] text-left">
+                        <tr className="border-t border-b border-r border-[#E5EAEF]" key={`1-${e._id}`}>
+                          <th
+                            className="w-[100px] border-t border-b border-r text-[12px] font-bold text-[#212325] text-left cursor-pointer hover:text-blue-500"
+                            onClick={() => toggleTextarea(i)}>
                             <div className="flex flex-1 items-center justify-between gap-1 px-2">
                               <div className="flex flex-1 items-center justify-start gap-1">
                                 <div>{e.projectName}</div>
@@ -200,7 +214,7 @@ const Activities = ({ date, user, project }) => {
                           </th>
                         </tr>
 
-                        {open === i && (
+                        {openTextareas.has(i) && (
                           <tr className="border border-[#E5EAEF]" key={`2-${e._id}`}>
                             <th className="w-[100px] border border-[#E5EAEF]  text-[12px] font-bold text-[#212325] text-left pl-[10px]">
                               <div></div>
