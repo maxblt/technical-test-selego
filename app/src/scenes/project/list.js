@@ -97,6 +97,13 @@ const Budget = ({ project }) => {
 
 const Create = ({ onChangeSearch, fetchProjects }) => {
   const [open, setOpen] = useState(false);
+  const [unmounted, setUnmounted] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      setUnmounted(true);
+    };
+  }, []);
 
   return (
     <div className="mb-[10px] ">
@@ -147,14 +154,20 @@ const Create = ({ onChangeSearch, fetchProjects }) => {
                   values.status = "active";
                   const res = await api.post("/project", values);
                   if (!res.ok) throw res;
-                  toast.success("Created!");
-                  setOpen(false);
-                  fetchProjects();
+                  if (!unmounted) {
+                    toast.success("Created!");
+                    setOpen(false);
+                    fetchProjects();
+                  }
                 } catch (e) {
-                  console.log(e);
-                  toast.error("Some Error!", e.code);
+                  if (!unmounted) {
+                    console.log(e);
+                    toast.error("Some Error!", e.code);
+                  }
                 }
-                setSubmitting(false);
+                if (!unmounted) {
+                  setSubmitting(false);
+                }
               }}>
               {({ values, handleChange, handleSubmit, isSubmitting }) => (
                 <React.Fragment>
