@@ -50,17 +50,19 @@ const Activities = ({ date, user, project }) => {
   const [activities, setActivities] = useState([]);
   const [openTextareas, setOpenTextareas] = useState(new Set());
 
+  const fetchActivities = async () => {
+    const { data } = await api.get(`/activity?date=${date.getTime()}&user=${user.name}&project=${project}`);
+    const projects = await api.get(`/project/list`);
+    setActivities(
+      data.map((activity) => {
+        return { ...activity, projectName: (activity.projectName = projects.data.find((project) => project._id === activity.projectId)?.name) };
+      }),
+    );
+    setOpenTextareas(new Set());
+  };
+
   useEffect(() => {
-    (async () => {
-      const { data } = await api.get(`/activity?date=${date.getTime()}&user=${user.name}&project=${project}`);
-      const projects = await api.get(`/project/list`);
-      setActivities(
-        data.map((activity) => {
-          return { ...activity, projectName: (activity.projectName = projects.data.find((project) => project._id === activity.projectId)?.name) };
-        }),
-      );
-      setOpenTextareas(new Set());
-    })();
+    fetchActivities();
   }, [date]);
 
   const days = getDaysInMonth(date.getMonth(), date.getFullYear());
@@ -97,7 +99,9 @@ const Activities = ({ date, user, project }) => {
     if (window.confirm("Are you sure ?")) {
       const activity = activities[i];
       await api.remove(`/activity/${activity._id}`);
-      toast.success(`Deleted ${activity.project}`);
+      toast.success(`Deleted ${activity.projectName}`);
+
+      await fetchActivities();
     }
   }
 
