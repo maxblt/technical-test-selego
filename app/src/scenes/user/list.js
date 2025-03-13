@@ -144,7 +144,14 @@ const Create = () => {
                       {/* Password */}
                       <div className="w-full md:w-[48%] mt-2">
                         <div className="text-[14px] text-[#212325] font-medium	">Password</div>
-                        <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="password" value={values.password} onChange={handleChange} />
+                        <input
+                          className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]"
+                          name="password"
+                          type="password"
+                          id="password"
+                          value={values.password}
+                          onChange={handleChange}
+                        />
                       </div>
                     </div>
                   </div>
