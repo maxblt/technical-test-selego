@@ -8,17 +8,20 @@ import LoadingButton from "../../components/loadingButton";
 import ProgressBar from "../../components/ProgressBar";
 
 import api from "../../services/api";
+
 const ProjectList = () => {
   const [projects, setProjects] = useState(null);
   const [activeProjects, setActiveProjects] = useState(null);
 
   const history = useHistory();
 
+  const fetchProjects = async () => {
+    const { data: u } = await api.get("/project");
+    setProjects(u);
+  };
+
   useEffect(() => {
-    (async () => {
-      const { data: u } = await api.get("/project");
-      setProjects(u);
-    })();
+    fetchProjects();
   }, []);
 
   useEffect(() => {
@@ -35,7 +38,7 @@ const ProjectList = () => {
 
   return (
     <div className="w-full p-2 md:!px-8">
-      <Create onChangeSearch={handleSearch} />
+      <Create onChangeSearch={handleSearch} fetchProjects={fetchProjects} />
       <div className="py-3">
         {activeProjects.map((hit) => {
           return (
@@ -92,7 +95,7 @@ const Budget = ({ project }) => {
   return <ProgressBar percentage={width} max={budget_max_monthly} value={total} />;
 };
 
-const Create = ({ onChangeSearch }) => {
+const Create = ({ onChangeSearch, fetchProjects }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -146,6 +149,7 @@ const Create = ({ onChangeSearch }) => {
                   if (!res.ok) throw res;
                   toast.success("Created!");
                   setOpen(false);
+                  fetchProjects();
                 } catch (e) {
                   console.log(e);
                   toast.error("Some Error!", e.code);
