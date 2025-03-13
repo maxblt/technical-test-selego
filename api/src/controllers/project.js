@@ -4,6 +4,7 @@ const router = express.Router();
 
 const ProjectObject = require("../models/project");
 const ActivityObject = require("../models/activity");
+const MessageObject = require("../models/message");
 
 const SERVER_ERROR = "SERVER_ERROR";
 const PROJECT_ALREADY_EXISTS = "PROJECT_ALREADY_EXISTS";
@@ -65,6 +66,7 @@ router.put("/:id", passport.authenticate("user", { session: false }), async (req
 router.delete("/:id", passport.authenticate("user", { session: false }), async (req, res) => {
   try {
     await ActivityObject.findOneAndRemove({ projectId: req.params.id });
+    await MessageObject.deleteMany({ projectId: req.params.projectId });
     await ProjectObject.findOneAndRemove({ _id: req.params.id });
     res.status(200).send({ ok: true });
   } catch (error) {

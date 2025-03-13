@@ -12,6 +12,7 @@ import api from "../../services/api";
 
 import ProgressBar from "../../components/ProgressBar";
 import SelectMonth from "./../../components/selectMonth";
+import ProjectChat from "./chat";
 
 ChartJS.register(...registerables);
 
@@ -94,6 +95,9 @@ const ProjectDetails = ({ project }) => {
       </div>
       <div className="flex flex-wrap p-3 gap-4"></div>
       <Activities project={project} />
+      <div className="mt-6">
+        <ProjectChat project={project} />
+      </div>
     </div>
   );
 };
